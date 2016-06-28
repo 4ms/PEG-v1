@@ -29,6 +29,7 @@ See http://creativecommons.org/licenses/MIT/ for more information.
 
 
 //#define OMITLOGS
+#define F_CPU 16000000
 #define ENABLE_UART
 
 #include <avr/io.h>
@@ -37,14 +38,14 @@ See http://creativecommons.org/licenses/MIT/ for more information.
 #include <util/delay.h>
 #include <avr/eeprom.h>
 #include "uart.h"
-
+/*
   FUSES =
     {
 	.extended = 0xff,
 	.high = 0xd1,
         .low = 0xce
     };
-
+*/
 
 #include "timer.h"
 #include "dac_mcp4921.h"
@@ -617,14 +618,14 @@ void eo_off(char sel){
 	}
 }
 
-void eor_on();
-void eor_off();
-void eof_on();
-void eof_off();
-void hr_on();
-void hr_off();
-void tapclkout_off();
-void tapclkout_on();
+void eor_on(void);
+void eor_off(void);
+void eof_on(void);
+void eof_off(void);
+void hr_on(void);
+void hr_off(void);
+void tapclkout_off(void);
+void tapclkout_on(void);
 
 inline void eor_on(void){
 	if (!EOR_IS_HALFRISE)
@@ -719,7 +720,7 @@ int main(void){
 	uint8_t curve_adc=127;
 
 	int8_t clock_divider_amount=1;
-	int8_t old_clock_divider_amount=1;
+	//int8_t old_clock_divider_amount=1;
 	int8_t t_clock_divider_amount=1;
 	int8_t c_d_a=1;
 	int8_t new_clock_divider_amount=1;
@@ -743,7 +744,7 @@ int main(void){
 	char envelope_running=0;
 
 	int16_t t_dacout=0;
-	int16_t last_dacout=0;
+	//int16_t last_dacout=0;
 	//uint16_t t_loga, t_inv_loga;
 	uint32_t rise_inc=0;
 	uint32_t fall_inc=0;
@@ -768,20 +769,20 @@ int main(void){
 	char ready_to_start_async=0;
 	char got_tap_clock=0;
 	uint8_t temp_u8=0,d,data1,data2;
-	int8_t temp_i8;
 	uint16_t temp_u16=0;
 	uint32_t temp_u32=0;
 	uint8_t flash_cycle_led=0;
 
 	uint32_t entering_system_mode=0;
-	uint8_t system_mode=0;
+	//uint8_t system_mode=0;
 	uint8_t system_mode_cur=0;
 	uint8_t initial_cycle_button_state=0;
 	char update_cycle_button_now=0;
 
 
-	uint8_t ping_link_mode_master=0,ping_link_mode_slave=0;
-	uint8_t send_ping_link_now=0;
+	//uint8_t ping_link_mode_master=0;
+	//uint8_t ping_link_mode_slave=0;
+	//uint8_t send_ping_link_now=0;
 
 	uint8_t rx_data=0, rx_ptr=0,rx_checksum=0;
 	uint8_t rx_buff[3]={0,0,0};
@@ -1517,6 +1518,7 @@ int main(void){
 					else
 						LIMIT_SKEW=0;
 
+					/*
 					if (rx_data & (1<<2)){
 					//	if (BLUE_DETECT)
 					//		ping_link_mode_slave=1;
@@ -1526,6 +1528,7 @@ int main(void){
 						ping_link_mode_master=0;
 					//	ping_link_mode_slave=0;
 					}
+					*/
 
 					if (rx_data & (1<<7))
 						NO_FREERUNNING_PING=0; //off=no free run
@@ -1578,7 +1581,7 @@ int main(void){
  				if (diff(adch, skew_adc)>SKEW_ADC_DRIFT){
 					skew_adc=adch;
 					update_risefallincs=1;
-					old_clock_divider_amount=clock_divider_amount;
+					//old_clock_divider_amount=clock_divider_amount;
 					new_clock_divider_amount=clock_divider_amount;
 				}
 			}
@@ -1695,7 +1698,7 @@ int main(void){
 				async_env_changed_shape=1;
 
 				if (divmult_changed){
-					old_clock_divider_amount=clock_divider_amount;
+					//old_clock_divider_amount=clock_divider_amount;
 					clock_divider_amount=new_clock_divider_amount;
 					
 					if (ping_div_ctr<0) ping_div_ctr=0;
@@ -1830,7 +1833,6 @@ int main(void){
 
 				if ((clock_divider_amount>1) && envelope_running){
 			
-					temp_i8=ping_div_ctr;
 
 					if (next_env_state==RISE){
 						ping_div_ctr=0;
@@ -2094,7 +2096,7 @@ int main(void){
 */
 				//Now we've calculated the DAC value, so output it
 				output_dac(t_dacout);
-				last_dacout=t_dacout;
+				//last_dacout=t_dacout;
 
 
 
@@ -2196,7 +2198,7 @@ int main(void){
 
 			_delay_ms(50);
 			entering_system_mode=0;
-			system_mode=1;
+			//system_mode=1;
 			initial_cycle_button_state=CYCLE_BUT_RAW;
 
 			/* Setup for the EOF mode*/

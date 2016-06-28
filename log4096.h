@@ -1,4 +1,4 @@
-uint16_t loga[4096] PROGMEM ={
+const uint16_t loga[4096] PROGMEM ={
 0,
 0,
 341,

@@ -67,7 +67,7 @@
 # Name of target controller 
 # (e.g. 'at90s8515', see the available avr-gcc mmcu 
 # options for possible values)
-MCU = atmega32
+MCU = atmega328
 
 # id to use with programmer
 # default: PROGRAMMER_MCU=$(MCU)
@@ -75,7 +75,7 @@ MCU = atmega32
 # accept the same MCU name as avr-gcc (for example
 # for ATmega8s, avr-gcc expects 'atmega8' and 
 # avrdude requires 'm8')
-PROGRAMMER_MCU = m32
+PROGRAMMER_MCU = m328
 
 # Name of our project (name of executable)
 # (use a single word, e.g. 'myproject')
@@ -86,12 +86,12 @@ PROJECTNAME = peg
 # (list all files to compile, e.g. 'a.c b.cpp as.S'):
 # Use .cc, .cpp or .C suffix for C++ files, use .S 
 # (NOT .s !!!) for assembly source code files.
-PRJSRC = peg.c timer.c timer.h
+PRJSRC = peg.c timer.c timer.h dac_mcp4921.c uart.c dac_mcp4921.h uart.h div32.S
 
 # AVR fuse calculator
 # http://www.engbedded.com/fusecalc/
 # Specify fuses
-FUSES = -U hfuse:w:0x9f:m -U lfuse:w:0xff:m 
+FUSES = -U hfuse:w:0xd1:m -U lfuse:w:0xce:m -U efuse:w:0xff:m
 
 # additional includes (e.g. -I/path/to/mydir)
 INC =
@@ -118,7 +118,7 @@ OPTLEVEL = 3
 # one of the valid "-c PROGRAMMER-ID" values 
 # described in the avrdude info page.
 # 
-AVRDUDE_PROGRAMMERID = dragon_jtag
+AVRDUDE_PROGRAMMERID = avrispmk2
 
 # port--serial or parallel port to which your 
 # hardware programmer is attached
